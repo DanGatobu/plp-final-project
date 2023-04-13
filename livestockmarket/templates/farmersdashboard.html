@@ -1,1 +1,37 @@
 {%extends 'base.html'%}
+{%block body%}
+{% for items in inventory%}
+<section style="background-color: #eee;">
+    <div class="container py-5">
+      <div class="row">
+        <div class="col-md-12 col-lg-4 mb-4 mb-lg-0">
+          <div class="card text-black">
+            <img src="{{items.image.url}}"
+              class="card-img-top" alt="iPhone" />
+            <div class="card-body">
+              <div class="text-center mt-1">
+                <h4 class="card-title">{{items.name}}</h4>
+                <h4 class="card-title">{{items.category}}</h4>
+                <h4 class="card-title"></h4>
+                
+                <h6 class="text-primary mb-1 pb-3">{{items.price}}</h6>
+              </div>
+  
+              <form action="{% url 'farmersdashboard' %}" method="post">
+
+                {% csrf_token %}
+
+                    <input type="hidden" name="itemid" value="{{items.id}}" >
+                    <button type="submit"><img src="" alt="">Delete Item</button>
+                </form>
+              
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+{% endfor %}
+{% endblock %}

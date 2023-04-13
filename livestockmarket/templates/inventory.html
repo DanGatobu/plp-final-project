@@ -1,19 +1,25 @@
 {%extends 'base.html'%}
+{%block body%}
 <table class="table">
     <thead>
       <tr>
-        <th scope="col">Firstname</th>
-        <th scope="col">Secondname</th>
-        <th scope="col">email</th>
+        <th scope="col">Item</th>
+        <th scope="col">Category</th>
+        <th scope="col">Price</th>
+        <th scope="col">vendor</th>
+        
         
       </tr>
     </thead>
     <tbody>
+{%for items in inventory %}
       <tr>
-        <th scope="row">1</th>
-        <td>{{vendor.first_name}}</td>
-        <td>{{vendor.last_name}}</td>
-        <td>{{vendor.email}}</td>
+        <td>{{items.name}}</td>
+        <td>{{items.category}}</td>
+        <td>{{items.price}}</td>
+        <td>{{items.vendor}}</td>
       </tr>
+{%endfor%}
     </tbody>
   </table>
+  {% endblock %}

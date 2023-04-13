@@ -1,4 +1,5 @@
 {%extends 'base.html'%}
+{%block body%}
 {% for items in inventory%}
 <section style="background-color: #eee;">
     <div class="container py-5">
@@ -11,9 +12,10 @@
               <div class="text-center mt-1">
                 <h4 class="card-title">{{items.name}}</h4>
                 <h4 class="card-title">{{items.category}}</h4>
-                <h4 class="card-title">{{items.vendor}}</h4>
+                <h4 class="card-title">Location:{{items.location}}</h4>
+                <h4 class="card-title">VENDOR:{{items.vendor}}</h4>
                 
-                <h6 class="text-primary mb-1 pb-3">{{items.price}}</h6>
+                <h6 class="text-primary mb-1 pb-3">PRICE:{{items.price}}</h6>
               </div>
   
               <form action="{% url 'cart' %}" method="post">
@@ -32,4 +34,5 @@
       </div>
     </div>
   </section>
-  {% endfor %}
+{% endfor %}
+{% endblock %}

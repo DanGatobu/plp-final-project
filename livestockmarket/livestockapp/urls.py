@@ -12,9 +12,7 @@ urlpatterns=[
     path('removefromcart',views.removefromcart,name='removefromcart'),
     path('market',views.market,name='market'),
     path('farmersdashboard',views.farmersdashboard,name='farmersdashboard'),
-    path('course',views.course,name='course'),
-    path('coursecontent',views.coursecontent,name='coursecontent'),
-    path('statistics',views.statistics,name='statistics'),
+    
     path('suppliments',views.suppliments,name='suppliments'),
     path('inventoryitems',views.inventoryitems,name='inventoryitems'),
     path('customers',views.customers,name='customers'),

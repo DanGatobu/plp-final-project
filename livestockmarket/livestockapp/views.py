@@ -93,15 +93,19 @@ def cart(request):
         usercart=tempcart.objects.filter(owner=user_id)
         context={'items':usercart}
         
+        
+        
 
     except tempcart.DoesNotExist:
         if request.method == 'POST':
             item_id = request.POST['itemid']
-            
+            supplement_id = request.POST['supplementid']
             # Create new cart object for user and add item to it
             user_cart = tempcart.objects.create(owner_id=user_id)
             item = inventory.objects.get(id=item_id)
             user_cart.items.add(item)
+            supplement = supp.objects.get(id=supplement_id)
+            user_cart.supplements.add(supplement)
             total_price = item.price
             usercart=tempcart.objects.filter(owner=user_id)
             context={'items':usercart}
@@ -170,6 +174,7 @@ def removefromcart(request):
 
 def market(request):
     items=inventory.objects.all()
+
     context={'inventory':items}
     
     return render(request,'market.html',context)
@@ -177,34 +182,32 @@ def market(request):
 @login_required(login_url='loginpage')
 
 def farmersdashboard(request):
-    
-    return render(request,'farmersdashboard.html')
+    vendor_id=request.user.id
+    vendor=User.objects.get(id=vendor_id)
+       
+    items=inventory.objects.filter(vendor=vendor)
+    context={'inventory':items}
+    if request.method=='POST':
+        id=request.POST['itemid']
+        itemdelete=inventory.objects.get(id=id)
+        
+        itemdelete.delete()
+        
+        return redirect('farmersdashboard')
+    return render(request,'farmersdashboard.html',context)
 
-@login_required(login_url='loginpage')
 
-def course(request):
-    
-    return render(request,'courseoverveiw.html')
 
-@login_required(login_url='loginpage')
 
-def coursecontent(request):
-    
-    return render(request,'coursecontent.html')
-
-@login_required(login_url='loginpage')
-
-def statistics(request):
-       #write if statement to take to diff page depending on role
-    return render(request,'coursecontent.html')
 
 @login_required(login_url='loginpage')
 
 def suppliments(request):
     items=supp.objects.all()
+
     context={'inventory':items}
     
-    return render(request,'marketbuysuppliments.html')
+    return render(request,'marketbuysuppliments.html',context)
 
 @login_required(login_url='loginpage')
 
@@ -226,13 +229,20 @@ def inventoryitems(request):
 @login_required(login_url='loginpage')
 
 def customers(request):
-       #write if statement to take to diff page depending on role
-    return render(request,'superusercustomers.html')
+    customers_group = Group.objects.get(name='customers')
+    customers = customers_group.user_set.all()
+
+    context={'users':customers}
+    return render(request,'superusercustomers.html',context)
 
 @login_required(login_url='loginpage')
 
 def sellers(request):
-       #write if statement to take to diff page depending on role
+    customers_group = Group.objects.get(name='farmer')
+    customers = customers_group.user_set.all()
+
+    context={'users':customers}
+    return render(request,'superusercustomers.html',context)
     return render(request,'superusersellers.html')
 
 

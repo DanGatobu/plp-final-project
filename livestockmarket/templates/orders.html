@@ -1,19 +1,24 @@
 {%extends 'base.html'%}
+{%block title%}orders{% endblock %}
+{%block body%}
+
+
 <table class="table">
     <thead>
       <tr>
-        <th scope="col">Firstname</th>
-        <th scope="col">Secondname</th>
-        <th scope="col">email</th>
-        
+        <th scope="col">order Id</th>
+        <th scope="col">Items</th>
+        <th scope="col">totalprice</th>
       </tr>
     </thead>
+    {%for order in orders%}
     <tbody>
       <tr>
         <th scope="row">1</th>
-        <td>{{vendor.first_name}}</td>
-        <td>{{vendor.last_name}}</td>
-        <td>{{vendor.email}}</td>
+        <td>{{order.items.name}}</td>
+        <td>{{order.totalprice}}</td>
       </tr>
     </tbody>
   </table>
+{% endfor %}
+{%endblock%}
