@@ -79,11 +79,13 @@ def cart(request):
         
         if request.method == 'POST':
             item_id = request.POST['itemid']
-            
+            suppliment_id=request.POST['supplimentid']
             # Add item to cart
             item = inventory.objects.get(id=item_id)
+            suppliment=supp.objects.get(id=supplement_id)
+            
             user_cart.items.add(item)
-        
+            user_cart.items.add(suppliment)
         
         # Calculate total price of items in cart
         
@@ -119,7 +121,52 @@ def cart(request):
     return render(request, 'cart.html', context)
 
             
+@login_required(login_url='loginpage')
+def supplimentscart(request):
+    user_id = request.user.id
+    
+    try:
+        # Check if cart object already exists for user
+        user_cart = tempcart.objects.get(owner=user_id)
         
+        if request.method == 'POST':
+            suppliment_id=request.POST['supplimentid']
+            # Add item to cart
+            suppliment=supp.objects.get(id=suppliment_id)
+            
+            
+            user_cart.supplements.add(suppliment)
+        
+        # Calculate total price of items in cart
+        
+        
+        item_prices = [itm.price for itm in user_cart.items.all()]
+        total_price = sum(item_prices)
+        usercart=tempcart.objects.filter(owner=user_id)
+        context={'items':usercart}
+        
+        
+        
+
+    except tempcart.DoesNotExist:
+        if request.method == 'POST':
+
+            supplement_id = request.POST['supplementid']
+            # Create new cart object for user and add item to it
+            user_cart = tempcart.objects.create(owner_id=user_id)
+
+
+            suppliment = supp.objects.get(id=supplement_id)
+            user_cart.supplements.add(supplement)
+            total_price = suppliment.price
+            usercart=tempcart.objects.filter(owner=user_id)
+            context={'items':usercart}
+            
+        else:
+            context = {}
+            
+    
+    return render(request, 'cart.html', context)
         
 
 
