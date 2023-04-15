@@ -12,7 +12,6 @@ from .decoraters import unauthenticated_user,group_required
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import Group
 from .models import inventory,customerorder,tempcart
-from .models import suppliments as supp
 
 
 
@@ -92,7 +91,7 @@ def cart(request):
         item_prices = [itm.price for itm in user_cart.items.all()]
         total_price = sum(item_prices)
         usercart=tempcart.objects.filter(owner=user_id)
-        context={'items':usercart}
+        context={'items':usercart,'totalprice':total_price}
         
         
         
@@ -107,67 +106,16 @@ def cart(request):
 
             total_price = item.price
             usercart=tempcart.objects.filter(owner=user_id)
-            context={'items':usercart}
+            context={'items':usercart,'totalprice':total_price}
             
         else:
             context = {}
             
     
-    # request.session['totalprice'] = total_price
     
     return render(request, 'cart.html', context)
 
             
-@login_required(login_url='loginpage')
-def supplimentscart(request):
-    user_id = request.user.id
-    
-    try:
-        # Check if cart object already exists for user
-        user_cart = tempcart.objects.get(owner=user_id)
-        
-        if request.method == 'POST':
-            suppliment_id=request.POST['supplimentid']
-            # Add item to cart
-            suppliment=supp.objects.get(id=suppliment_id)
-            
-            
-            user_cart.supplements.add(suppliment)
-        
-        # Calculate total price of items in cart
-        
-        
-        item_prices = [itm.price for itm in user_cart.items.all()]
-        total_price = sum(item_prices)
-        usercart=tempcart.objects.filter(owner=user_id)
-        context={'items':usercart}
-        
-        
-        
-
-    except tempcart.DoesNotExist:
-        if request.method == 'POST':
-
-            supplement_id = request.POST['supplementid']
-            # Create new cart object for user and add item to it
-            user_cart = tempcart.objects.create(owner_id=user_id)
-
-
-            suppliment = supp.objects.get(id=supplement_id)
-            user_cart.supplements.add(suppliment)
-            total_price = suppliment.price
-            usercart=tempcart.objects.filter(owner=user_id)
-            context={'items':usercart}
-            
-        else:
-            context = {}
-            
-    
-    return render(request, 'cart.html', context)
-        
-
-
-
 
 
 @login_required(login_url='loginpage')
@@ -178,12 +126,13 @@ def orders(request):
         totalprice = request.session['totalprice']
         cartiditems = tempcart.objects.get(id=itemidd)
         itemids = cartiditems.items.all()
+        customerinstance = User.objects.get(id=user)
+        orderobj = customerorder.objects.create(owner=customerinstance, totalprice=totalprice)
         for it in itemids:
-            customerinstance=User.objects.get(id=user)
-            orderobj = customerorder.objects.create(owner=customerinstance, totalprice=totalprice)
             orderobj.items.add(it)
+    
         cartiditems.delete()
-        return redirect('items')
+        return redirect('market')
     itemss = customerorder.objects.filter(owner=user)
     context = {'orders': itemss}
     return render(request, 'orders.html', context)
@@ -214,22 +163,13 @@ def removefromcart(request):
         return redirect('cartnormal')
     return render(request, 'cart.html')
 
-@login_required(login_url='loginpage')
 
-def removesupplimentfromcart(request):
-    if request.method == 'POST':
-        cartid = request.POST['cartid']
-        itemid = request.POST['itemid']
-        cart_item = tempcart.objects.get(id=cartid)
-        item = cart_item.supplements.get(id=itemid)
-        cart_item.supplements.remove(item)
-        return redirect('cartnormal')
-    return render(request, 'cart.html')
+
 
 @login_required(login_url='loginpage')
 
 def market(request):
-    items=inventory.objects.all()
+    items=inventory.objects.exclude(category='suppliments')
 
     context={'inventory':items}
     
@@ -259,7 +199,7 @@ def farmersdashboard(request):
 @login_required(login_url='loginpage')
 
 def suppliments(request):
-    items=supp.objects.all()
+    items=inventory.objects.filter(category='suppliments')
 
     context={'inventory':items}
     

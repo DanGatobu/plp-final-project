@@ -15,24 +15,17 @@ class inventory(models.Model):
 
 
 
+
+
+class tempcart(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    items = models.ManyToManyField(inventory)
+    
+    
+    datecreated = models.DateTimeField(auto_now_add=True)
+
 class customerorder(models.Model):
     items = models.ManyToManyField(inventory)
     datecreated = models.DateTimeField(auto_now_add=True)
     totalprice = models.FloatField()
     owner=models.ForeignKey(User,on_delete=models.CASCADE)
-class suppliments(models.Model):
-    name=models.CharField(max_length=100)
-    price=models.FloatField()
-    ammount=models.IntegerField()
-    category=models.CharField(max_length=400 ,default='Suppliment')
-    vendor=models.CharField(max_length=400 ,default='Farmy')
-    image=models.ImageField(upload_to='suppliment_image/')
-class tempcart(models.Model):
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    items = models.ManyToManyField(inventory)
-    supplements = models.ManyToManyField(suppliments)
-    
-    
-    datecreated = models.DateTimeField(auto_now_add=True)
-
-

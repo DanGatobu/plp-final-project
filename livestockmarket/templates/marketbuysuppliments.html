@@ -17,11 +17,11 @@
                 <h6 class="text-primary mb-1 pb-3">PRICE:{{items.price}}</h6>
               </div>
   
-              <form action="{% url 'supplimentscart' %}" method="post">
+              <form action="{% url 'cart' %}" method="post">
 
                 {% csrf_token %}
 
-                    <input type="hidden" name="supplimentid" value="{{items.id}}" >
+                    <input type="hidden" name="itemid" value="{{items.id}}" >
                     <button type="submit"><img src="" alt="">add To cart</button>
                 </form>
               

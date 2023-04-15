@@ -21,12 +21,13 @@
             <td scope="row">{{ related_item.category }}</td>
             <td scope="row">{{ related_item.vendor }}</td>
             <td scope="row">{{ price }}</td>
-            <td scope="row"><form action="{% url 'cart' %}" method="post">
+            <td scope="row">
+              <form action="{% url 'orders' %}" method="post">
 
-              {% csrf_token %}
+                {% csrf_token %}
 
-                  <input type="hidden" name="itemid" value="{{items.id}}" >
-                  <button type="submit"><img src="" alt="">Order all items</button>
+                <input type="hidden" name="itemid" value="{{item.id}}" >
+                <button type="submit"><img src="" alt="">Order all items</button>
               </form></td>
               <td scope="row">
                 <form action="{% url 'removefromcart' %}" method="post">
@@ -38,34 +39,10 @@
               </td>
           </tr>
         {% endfor %}
-        {% for supplement in item.supplements.all %}
-          <tr>
-            <td scope="row">{{ supplement.name }}</td>
-            <td scope="row">{{ supplement.price }}</td>
-            <td scope="row">{{ supplement.category }}</td>
-            <td scope="row">{{ supplement.vendor }}</td>
-            <td scope="row">{{ supplement.price }}</td>
-            <td scope="row"><form action="{% url 'cart' %}" method="post">
-
-              {% csrf_token %}
-
-                  <input type="hidden" name="itemid" value="{{items.id}}" >
-                  <button type="submit"><img src="" alt="">Order all items</button>
-              </form></td>
-              <td scope="row">
-                <form action="{% url 'removesupplimentfromcart' %}" method="post">
-                  {% csrf_token %}
-                  <input type="hidden" name="itemid" value="{{ supplement.id }}" >
-                  <input type="hidden" name="cartid" value="{{ item.id }}" >
-                  <button type="submit"><img src="" alt="">Remove</button>
-                </form>
-              </td>
+        
           </tr>
     </tbody>
     
-            
-        
-        {% endfor %}
       {% endfor %}
     </tbody>
   </table>
