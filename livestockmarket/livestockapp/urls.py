@@ -13,6 +13,7 @@ urlpatterns=[
     path('market',views.market,name='market'),
     path('farmersdashboard',views.farmersdashboard,name='farmersdashboard'),
     path('supplimentscart',views.supplimentscart,name='supplimentscart'),
+    path('removesupplimentfromcart',views.removesupplimentfromcart,name='removesupplimentfromcart'),
     path('suppliments',views.suppliments,name='suppliments'),
     path('inventoryitems',views.inventoryitems,name='inventoryitems'),
     path('customers',views.customers,name='customers'),

@@ -79,13 +79,12 @@ def cart(request):
         
         if request.method == 'POST':
             item_id = request.POST['itemid']
-            suppliment_id=request.POST['supplimentid']
+
             # Add item to cart
             item = inventory.objects.get(id=item_id)
-            suppliment=supp.objects.get(id=supplement_id)
+            
             
             user_cart.items.add(item)
-            user_cart.items.add(suppliment)
         
         # Calculate total price of items in cart
         
@@ -101,13 +100,11 @@ def cart(request):
     except tempcart.DoesNotExist:
         if request.method == 'POST':
             item_id = request.POST['itemid']
-            supplement_id = request.POST['supplementid']
             # Create new cart object for user and add item to it
             user_cart = tempcart.objects.create(owner_id=user_id)
             item = inventory.objects.get(id=item_id)
             user_cart.items.add(item)
-            supplement = supp.objects.get(id=supplement_id)
-            user_cart.supplements.add(supplement)
+
             total_price = item.price
             usercart=tempcart.objects.filter(owner=user_id)
             context={'items':usercart}
@@ -157,7 +154,7 @@ def supplimentscart(request):
 
 
             suppliment = supp.objects.get(id=supplement_id)
-            user_cart.supplements.add(supplement)
+            user_cart.supplements.add(suppliment)
             total_price = suppliment.price
             usercart=tempcart.objects.filter(owner=user_id)
             context={'items':usercart}
@@ -214,6 +211,18 @@ def removefromcart(request):
         cart_item = tempcart.objects.get(id=cartid)
         item = cart_item.items.get(id=itemid)
         cart_item.items.remove(item)
+        return redirect('cartnormal')
+    return render(request, 'cart.html')
+
+@login_required(login_url='loginpage')
+
+def removesupplimentfromcart(request):
+    if request.method == 'POST':
+        cartid = request.POST['cartid']
+        itemid = request.POST['itemid']
+        cart_item = tempcart.objects.get(id=cartid)
+        item = cart_item.supplements.get(id=itemid)
+        cart_item.supplements.remove(item)
         return redirect('cartnormal')
     return render(request, 'cart.html')
 

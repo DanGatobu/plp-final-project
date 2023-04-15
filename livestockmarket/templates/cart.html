@@ -6,11 +6,10 @@
       <tr>
         <th scope="col">Name</th>
         <th scope="col">Price</th>
-        <th scope="col">total items</th>
         <th scope="col">Category</th>
         <th scope="col">Vendor</th>
         <th scope="col">totalprice:{{price}}</th>
-        <th scope="col">Remove</th>
+    
       </tr>
     </thead>
     <tbody>
@@ -19,19 +18,53 @@
           <tr>
             <td scope="row">{{ related_item.name }}</td>
             <td scope="row">{{ related_item.price }}</td>
-            <td scope="row">{{ related_item.total_items }}</td>
             <td scope="row">{{ related_item.category }}</td>
             <td scope="row">{{ related_item.vendor }}</td>
             <td scope="row">{{ price }}</td>
-            <td scope="row">
-              <form action="{% url 'removefromcart' %}" method="post">
-                {% csrf_token %}
-                <input type="hidden" name="itemid" value="{{ related_item.id }}" >
-                <input type="hidden" name="cartid" value="{{ item.id }}" >
-                <button type="submit"><img src="" alt="">Remove</button>
-              </form>
-            </td>
+            <td scope="row"><form action="{% url 'cart' %}" method="post">
+
+              {% csrf_token %}
+
+                  <input type="hidden" name="itemid" value="{{items.id}}" >
+                  <button type="submit"><img src="" alt="">Order all items</button>
+              </form></td>
+              <td scope="row">
+                <form action="{% url 'removefromcart' %}" method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="itemid" value="{{ related_item.id }}" >
+                  <input type="hidden" name="cartid" value="{{ item.id }}" >
+                  <button type="submit"><img src="" alt="">Remove</button>
+                </form>
+              </td>
           </tr>
+        {% endfor %}
+        {% for supplement in item.supplements.all %}
+          <tr>
+            <td scope="row">{{ supplement.name }}</td>
+            <td scope="row">{{ supplement.price }}</td>
+            <td scope="row">{{ supplement.category }}</td>
+            <td scope="row">{{ supplement.vendor }}</td>
+            <td scope="row">{{ supplement.price }}</td>
+            <td scope="row"><form action="{% url 'cart' %}" method="post">
+
+              {% csrf_token %}
+
+                  <input type="hidden" name="itemid" value="{{items.id}}" >
+                  <button type="submit"><img src="" alt="">Order all items</button>
+              </form></td>
+              <td scope="row">
+                <form action="{% url 'removesupplimentfromcart' %}" method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="itemid" value="{{ supplement.id }}" >
+                  <input type="hidden" name="cartid" value="{{ item.id }}" >
+                  <button type="submit"><img src="" alt="">Remove</button>
+                </form>
+              </td>
+          </tr>
+    </tbody>
+    
+            
+        
         {% endfor %}
       {% endfor %}
     </tbody>
