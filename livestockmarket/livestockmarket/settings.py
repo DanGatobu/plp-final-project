@@ -84,7 +84,8 @@ DATABASES = {
     }
 }
 
-sqlite3.connect = sqlite.connect
+# Use sqlite3 instead of pysqlite3
+sqlite3.connect = sqlite3.connect
 
 
 # Password validation
