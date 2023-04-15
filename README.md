@@ -1,5 +1,6 @@
 # plp-final-project
 This repository contains the source code for a web application that allows farmers to sell their livestock online. The application includes a Learning Management System (LMS) to help farmers learn how to use the platform to sell their livestock more effectively. The web application is written using the Python Django framework.
+To Use the wecsite, please visit [Farmy](livestockmarket.vercel.app).
 
 Table of Contents
 Getting Started
