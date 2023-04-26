@@ -123,11 +123,15 @@ def orders(request):
     user = request.user.id
     if request.method == 'POST':
         itemidd = request.POST['itemid']
-        totalprice = request.session['totalprice']
+    
         cartiditems = tempcart.objects.get(id=itemidd)
         itemids = cartiditems.items.all()
         customerinstance = User.objects.get(id=user)
-        orderobj = customerorder.objects.create(owner=customerinstance, totalprice=totalprice)
+        user_cart = tempcart.objects.get(owner=user)
+        item_prices = [itm.price for itm in user_cart.items.all()]
+        total_price = sum(item_prices)
+    
+        orderobj = customerorder.objects.create(owner=customerinstance, totalprice=total_price)
         for it in itemids:
             orderobj.items.add(it)
     
